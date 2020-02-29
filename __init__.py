@@ -138,6 +138,7 @@ class PickleFileWrangler(DataStoreWrangler, OSDataStore):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('READ ERROR! No datastore with that name')
+                return False
         with open(ds_path, 'rb') as ds:
             try:
                 return pickle.load(ds)
@@ -222,6 +223,7 @@ class CSVWrangler(DataStoreWrangler, OSDataStore):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('READ ERROR! No datastore with that name')
+                return False
         with open(ds_path, 'r') as ds:
             return [d for d in csv.reader(ds)]
 
