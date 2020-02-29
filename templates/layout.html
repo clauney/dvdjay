@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+    {% include 'tophead.html' %}
+
+    {% include 'header.html' %}
+
+<!-- new for qr tagging flow -->
+<style>
+    .selectedasset {background-color: lightgreen;}
+    /* .bodycontainer { max-height: 600px; width: 100%; overflow-y: auto; } */
+    .bodycontainer { width: 100%; overflow-y: auto; }
+</style>
+<!-- new for qr tagging flow -->
+
+
+{% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+        {% for err in errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ err }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% with goodstuff = get_flashed_messages(category_filter=["success"]) %}
+    {% if goodstuff %}
+        {% for woot in goodstuff %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ woot }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ msg }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+<body>
+        {% if error %}
+        <div class="container-fluid" style="margin-left: 7px;">
+            <p class=error><strong>Error:</strong> {{ error }}</p>
+        </div>
+            {% endif %}
+        {% if success %}
+        <div class="container-fluid" style="margin-left: 7px;">
+            <p class=error><strong>Success!</strong> {{ success }}</p>
+        </div>
+        {% endif %}
+
+    {% block content %}
+    
+    {% endblock %}
+ 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.4.1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/popper-1.14.17.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+
+</body>
+
+</html>

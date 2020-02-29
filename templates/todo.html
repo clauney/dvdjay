@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<h5>{{who}} | ToDo</h5>
+    <form style="margin-bottom: 5px" class="custom_validate form-inline" method="POST" action="{{ url_for('print_image_3') }}">
+        <input required onmousedown="event.preventDefault()" onkeydown="event.preventDefault()" name="print_asset_id" id="print_asset_id" type="text" placeholder=" select asset below" />
+        <!-- <input required onmousedown="event.preventDefault()" onkeydown="event.preventDefault()" name="print_asset_class" id="print_asset_class" type="text" placeholder=" select asset below" /> -->
+        <input name="store_num" type="hidden" value="{{ store_num }}" />
+        <input name="facility_id" type="hidden" value="{{ facility_id }}" />
+        <input name="form_action" type="hidden" value="print" />
+        <!-- &nbsp;<button class="btn btn-danger btn-sm" type="submit">DETACH Sensor</button> -->
+        &nbsp;<button class="btn btn-success btn-sm" type="submit" name="act" value="Generate"><strong>Generate</strong> QR Code</button>
+        &nbsp;<button class="btn btn-warning btn-sm" type="submit" name="act" value="Report"><strong>Report</strong> issue</button> 
+    </form>
+    <div class="bodycontainer scrollable">
+    <table style="cursor: pointer" class="table table-sm" id="storeassets">
+        <thead class="thead-light">
+            <TR>
+                <th scope="col">Class</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Serial #</th>
+                <th scope="col">Asset ID</th>
+                <th scope="col">Description</th>
+                <th scope="col">Spec Model</th>
+                <th scope="col">Spec</th>
+            </TR>
+        </thead>
+        <tbody>
+            {% for asset in assetlist %}
+                <TR>
+                    <TD>{{asset.type}}</TD>
+                    <TD>{{asset.vendor}}</TD>
+                    <TD>{{asset.serial_num}}</TD>
+                    <TD>{{asset.asset_id}}</TD>
+                    <TD>{{asset.desc}}</TD>
+                    <TD>{{asset.mod_name}}</TD>
+                    <TD>{{asset.equip_spec}}</TD>
+                </TR>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+<script type="text/javascript">
+    var sensortable = document.getElementById('storeassets'),
+        rIndex,
+        selected = sensortable.getElementsByClassName('selectedasset');
+    for (var i = 1; i < sensortable.rows.length; i++){
+        sensortable.rows[i].onclick = function(){
+            if (selected[0]) {
+                selected[0].className = '';
+            }
+            this.className = 'selectedasset';
+            rIndex = this.rowsIndex;
+            for (var i = 0, len = document.getElementsByTagName("input").length; i < len; i++) {
+                document.getElementsByTagName("input")[i].checked = false; 
+            }
+            document.getElementById("print_asset_id").value = this.cells[3].innerHTML;
+            // document.getElementById("print_asset_class").value = this.cells[0].innerHTML;
+            
+        };
+    }
+</script>
+
+<!-- <script type="text/javascript">
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('custom_validate');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                }, false);
+            });
+            }, false);
+        })();
+</script> -->
+
+{% endblock %}
