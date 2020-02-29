@@ -65,9 +65,9 @@ class OSDataStore():
         return os.path.exists(self.location)
 
     def init_location(self):
-        print('old location:', self.location)
+        logging.debug('location as passed:', self.location)
         self.location = self.location.rstrip(self.location_separator)
-        print('new location:', self.location)
+        logging.debug('location now:', self.location)
         if self.check_location_exists():
             if not os.path.isdir(self.location):
                 logging.critical('LOCATION PROVIDED IS NOT A DIRECTORY!')
