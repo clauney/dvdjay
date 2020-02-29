@@ -6,8 +6,14 @@ Created on Sun Feb 16 17:56:08 2020
 @author: chrislauney
 """
 import datetime
+import sys
 
 from flask import Flask, request, render_template
+
+import datawrangler
+
+cache_data_filename = 'dvdjay'
+run_webapp = False
 
 attribute_defs = [
     {'id': 'name', 'name': 'Name', 'required': True, 'type': 'text'},
@@ -25,9 +31,12 @@ attribute_choices = {
     'location': {'multiple_allowed': False, 'additions_allowed': False, 'choices': ['Meteor Room DVD Cabinet', 'Heather\'s iMac', 'Meteor Room DVD Folio']},
     }
 
+dw = datawrangler.PickleFileWrangler(location='./')
+show_data_existing = dw.read_data_store(cache_data_filename)
+show_data = show_data_existing if show_data_existing else {}
 
-movie_data = [
-    {'type': 'Movie', 'title': 'Donnie Darko', 'year': '2001', 'genre': [], 'format': 'DVD'},
+show_data_test = [
+    {'show_type': 'Movie', 'title': 'Donnie Darko', 'year': '2001', 'genre': [], 'format': 'DVD'},
     {'show_type': 'Movie', 'title': 'Pearl Harbor', 'year': '2001', 'genre': [], },
     ]
 
@@ -46,8 +55,10 @@ def appinfo():
     return render_template('appinfo.html')
 
 
+#%% GO TIME
+if len(sys.argv) >= 2 and 'true' in sys.argv[1].lower():
+    run_webapp = True
 
-
-if __name__ == '__main__':
+if __name__ == '__main__' and run_webapp:
     app.run(debug=True)
 
