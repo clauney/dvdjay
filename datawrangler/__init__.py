@@ -110,7 +110,7 @@ class PickleFileWrangler(DataStoreWrangler, OSDataStore):
         '''
         ds_path = self.get_datastore_fullpath(datastore_name)
         if not datastore_name in self.datastores:
-            if self.check_datastore_exists:
+            if self.check_datastore_exists(datastore_name):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('REPLACE ERROR! No datastore with that name')
@@ -134,7 +134,7 @@ class PickleFileWrangler(DataStoreWrangler, OSDataStore):
         '''
         ds_path = self.get_datastore_fullpath(datastore_name)
         if not datastore_name in self.datastores:
-            if self.check_datastore_exists:
+            if self.check_datastore_exists(datastore_name):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('READ ERROR! No datastore with that name')
@@ -183,7 +183,7 @@ class CSVWrangler(DataStoreWrangler, OSDataStore):
     def replace_datastore(self, datastore_name, data):
         ds_path = self.get_datastore_fullpath(datastore_name)
         if not datastore_name in self.datastores:
-            if self.check_datastore_exists:
+            if self.check_datastore_exists(datastore_name):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('REPLACE ERROR! No datastore with that name')
@@ -199,7 +199,7 @@ class CSVWrangler(DataStoreWrangler, OSDataStore):
     def add_to_datastore(self, datastore_name, data):
         ds_path = self.get_datastore_fullpath(datastore_name)
         if not datastore_name in self.datastores:
-            if self.check_datastore_exists:
+            if self.check_datastore_exists(datastore_name):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('WRITE ERROR! No datastore with that name')
@@ -219,7 +219,7 @@ class CSVWrangler(DataStoreWrangler, OSDataStore):
         '''
         ds_path = self.get_datastore_fullpath(datastore_name)
         if not datastore_name in self.datastores:
-            if self.check_datastore_exists:
+            if self.check_datastore_exists(datastore_name):
                 self.datastores[datastore_name] = ds_path
             else:
                 logging.error('READ ERROR! No datastore with that name')

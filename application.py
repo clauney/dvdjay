@@ -12,9 +12,13 @@ from flask import Flask, request, render_template
 
 import datawrangler
 
+#%% LOCAL / DEFAULT CONFIGS
 cache_data_filename = 'dvdjay'
 run_webapp = False
 
+
+
+#%% SCHEMA-Y THINGS
 attribute_defs = [
     {'id': 'name', 'name': 'Name', 'required': True, 'type': 'text'},
     {'id': 'year', 'name': 'Year', 'required': False, 'type': 'number'},
@@ -31,20 +35,39 @@ attribute_choices = {
     'location': {'multiple_allowed': False, 'additions_allowed': False, 'choices': ['Meteor Room DVD Cabinet', 'Heather\'s iMac', 'Meteor Room DVD Folio']},
     }
 
+
+def get_movie_data():
+    return dw.read_data_store(cache_data_filename)
+
+def post_movie_data(data):
+    resp = dw.replace_datastore(cache_data_filename, data)
+    if resp:
+        return True
+    else:
+        return False
+
+
+#%% INIT DATA BACKEND
 dw = datawrangler.PickleFileWrangler(location='./')
+
+if not dw.check_datastore_exists(cache_data_filename):
+    dw.create_datastore(cache_data_filename)
+
 show_data_existing = dw.read_data_store(cache_data_filename)
+
 show_data = show_data_existing if show_data_existing else {}
 
-show_data_test = [
-    {'show_type': 'Movie', 'title': 'Donnie Darko', 'year': '2001', 'genre': [], 'format': 'DVD'},
-    {'show_type': 'Movie', 'title': 'Pearl Harbor', 'year': '2001', 'genre': [], },
-    ]
+if not show_data:
+    show_data_test = [
+        {'show_type': 'Movie', 'title': 'Donnie Darko', 'year': '2001', 'genre': [], 'format': 'DVD'},
+        {'show_type': 'Movie', 'title': 'Pearl Harbor', 'year': '2001', 'genre': [], },
+        ]
+    dw.replace_datastore(cache_data_filename, show_data_test)
 
+current_show_data = dw.read_data_store(cache_data_filename)
 
-
-
+#%% INIT FLASK ROUTES
 app = Flask(__name__)
-
 
 @app.route('/')
 def index():
@@ -56,6 +79,7 @@ def appinfo():
 
 
 #%% GO TIME
+    
 if len(sys.argv) >= 2 and 'true' in sys.argv[1].lower():
     run_webapp = True
 
