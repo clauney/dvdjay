@@ -1,0 +1,160 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid" style="margin-left: 7px;">
+    <h4>DVDeejay</h4>
+    {%if user%}<h4>AUTHENTICATED USER: {{user}}</h4>{% endif %}
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-lg-3">
+
+            <div class="card">
+                <h5 class="card-header">
+                    ADD NEW SHOW
+                </h5>
+                <div class="card-body">
+                    <p class="card-text">
+                        <form method="POST" action="{{ url_for('dvdjay') }}" >
+                            {% for att in att_defs %}
+                            <div class="form-group form-inline">
+                                {{att.name}}&nbsp;&nbsp;
+                                {% if att.type in ['text', 'number'] %}
+                                    <input name="{{att.id}}" {% if att_dict.get(att.id).required %}required{% endif %} 
+                                                class="form-control form-control-sm" type="{{att.type}}" 
+                                                placeholder="{{att_dict.get(att.id).example_text}}">
+                                {% elif att.type == "choice" %}
+                                    <select name="{{att.id}}"
+                                                class="{% if att_dict.get(att.id).multiple_allowed %}multiselect-ui{% endif %} form-control"
+                                                {% if att_dict.get(att.id).required %}required{% endif %}
+                                                {% if att_dict.get(att.id).multiple_allowed %}multiple="multiple"   {% endif %}
+                                                >
+                                        {% if not att_dict.get(att.id).multiple_allowed %}
+                                            <option value selected {% if att_dict.get(att.id).required %}disabled{% endif %}>
+                                                {% if att_dict.get(att.id).required %}choose a {{att.id}}{% endif %}
+                                            </option>
+                                        {% endif %}
+                                        {% for f in att_dict.get(att.id).choices %}
+                                            <option value="{{f}}">{{f}}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            <button class="btn btn-sm btn-primary">Add</button>
+                        </form>
+                    </p>
+                </div>
+            </div>
+
+            {% for d in att_defs %}
+                {% if d.type == 'choice' %}
+                    <div class="card" style="margin-top: 10px;">
+                        <h5 class="card-header">
+                            {{d.name|upper + 'S'}}
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <table class="table table-sm table-hover">
+                                    {% for g in att_dict.get(d.id, {}).get('choices') %}
+                                    <tr><td>{{g}}</td></tr>
+                                    {% endfor %}
+                                </table>
+                                <form class="form-inline" method="POST" action="{{ url_for('dvdjay') }}" >
+                                    <input hidden name="action" value="new_list_item">
+                                    <input hidden name="list" value="{{d.id}}">
+                                    <input name="add_item" required class="form-control form-control-sm" type="text" placeholder="{{att_dict.get(d.id, {}).get('example_text', '')}}">
+                                    &nbsp; <button class="btn btn-sm btn-primary">Add</button>
+                                </form>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% for d in att_defs %}
+                {% if d.type == 'choice' %}
+                    {{d}}<br><br>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div class="col-lg-9">
+            <div class="card">
+                <h5 class="card-header">
+                    ALL SHOWS
+                </h5>
+                <div class="card-body">
+                    <h6 class="card-title">
+
+                    </h6>
+                    <input class="form-control" id="tableFilter" type="text" placeholder="Search / Filter shows">
+
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">Name</th>
+                                <th scope="col">Year</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Format</th>
+                                <th scope="col">Location</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fiteredTable">
+                            {% for d in shows %}
+                            <tr>
+                                <td>{{d.name}}</td>
+                                <td>{{d.year}}</td>
+                                <td>
+                                    {% for s in d.genre %}
+                                    <span class="badge badge-primary">{{s}}</span><br>
+                                    {% endfor %}
+                                </td>
+                                <td>{{d.type}}</td>
+                                <td>{{d.format}}</td>
+                                <td>{{d.location}}</td>                 
+                                <td><button class="btn btn-sm btn-primary" disabled onClick="">edit</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br> <br>DEBUG INFO <br> <br>
+            shows: {{shows}}<br><br>
+            defs: {{att_defs}}<br><br>
+            att dict: {{att_dict}}
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+    
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#tableFilter").on("keyup", function() {
+		var value = $(this).val().toLowerCase();
+		$("#fiteredTable tr").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+		});
+	});
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // $('#example-getting-started').multiselect();
+        $('.multiselect-ui').multiselect();
+    });
+</script>
+
+{% endblock %}
