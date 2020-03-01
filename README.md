@@ -8,16 +8,17 @@ The bare minimum effort to keep a shred of sanity In the eternal fracas of media
 
 ## First:
 
-* Easily searchable or browseable catalog of video (cutouts for music, maybe other), with some data-driven attributes (shared across and/or specific to media type)
-* Add new show to catalog
-* Persistent data for media catalog
-* Add item to a given attribute list (e.g., create new Genre)
+* ~~Easily searchable or browseable catalog of video (cutouts for music, maybe other), with some data-driven attributes (shared across and/or specific to media type)~~
+* ~~Add new show to catalog~~
+* ~~Persistent data for media catalog~~
+  * ~~ok, I give up, I've rewritten the same pickle/csv/etc. stuff over and over again for every little thing. going to make a data wrangler for that stuff that we can pull in as a submod~~
+* ~~Add item to a given attribute list (e.g., create new Genre)~~
 * Backup of catalog data to something like Google Sheets
 * basic profiles (pick one / create new, cutouts for auth). profiles unlock future stuff like tags, lists, RBAC, etc.
 * per-profile tags [to watch, love, hate]
+* Class out the basic gvars and funcs of the media manager so we can start to abstract things out as we go
 
 ## Next
-* Class out the basic gvars and funcs of the media manager so we can start to abstract things out as we go
 * API routes for GETs / POSTs
 * Scrapers to automatically add stuff to the catalog:
   * filesystem path (incl. network mount)
