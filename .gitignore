@@ -12,3 +12,5 @@ logs/
 nohup.out
 venv.bak/
 venv/
+*.pf
+
